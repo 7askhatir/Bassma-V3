@@ -1,5 +1,6 @@
 package org.basma.store.services.Impl;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.basma.store.entities.CategorieEntity;
@@ -7,6 +8,8 @@ import org.basma.store.repositories.CategorieRepository;
 import org.basma.store.services.CategorieService;
 import org.basma.store.shared.Utils;
 import org.basma.store.shared.dto.CategorieDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -108,9 +111,12 @@ public class CategorieServiceImpl implements CategorieService {
 	}
 
 	@Override
-	public List<CategorieDto> getCategories(int page, int limit, String search, int status) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CategorieDto> getAllCategories() {
+		List<CategorieEntity> categories = (List<CategorieEntity>)categorieRepository.findAll();
+		Type listType = new TypeToken<List<CategorieDto>>() {}.getType();
+		List<CategorieDto> categorieDto = new ModelMapper().map(categories, listType);
+		return categorieDto;
 	}
+	
 
 }

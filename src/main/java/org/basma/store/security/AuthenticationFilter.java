@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
   
@@ -64,20 +66,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	        
 	        UserDto userDto = userService.getUser(userName);
 	        
-	        String token = Jwts.builder()
-	                .setSubject(userName)
-	                .claim("id", userDto.getUserId())
-	                .claim("name", userDto.getPrenomUser() + " " + userDto.getNomUser())
-	                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-	                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
-	                .compact();
+//	        String token = Jwts.builder()
+//	                .setSubject(userName)
+//	                .claim("id", userDto.getUserId())
+//	                .claim("name", userDto.getPrenomUser() + " " + userDto.getNomUser())
+//	                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+//	                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
+//	                .compact();
 	        
+	        String jwt= JWT.create()
+	                .withIssuer(req.getRequestURI())
+	                .withClaim("id", userDto.getUserId())
+	                .withClaim("name", userDto.getPrenomUser() + " " + userDto.getNomUser())
+	                .withClaim("roles",userDto.getRoleUser())
+	                .withExpiresAt(new Date(System.currentTimeMillis()+SecurityConstants.EXPIRATION_TIME))
+	                .sign(Algorithm.HMAC256(SecurityConstants.TOKEN_SECRET));
+	        res.addHeader(SecurityConstants.HEADER_STRING,jwt);
 	       
-	       
-	        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-	        res.addHeader("user_id", userDto.getUserId());
-	        
-	        res.getWriter().write("{\"token\": \"" + token + "\", \"id\": \""+ userDto.getUserId() + "\"}");
+//	        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+//	        res.addHeader("user_id", userDto.getUserId());
+//	        
+//	        res.getWriter().write("{\"token\": \"" + token + "\", \"id\": \""+ userDto.getUserId() + "\"}");
 
 	    }  
 }

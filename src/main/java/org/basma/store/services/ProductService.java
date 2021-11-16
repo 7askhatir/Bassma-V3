@@ -16,6 +16,8 @@ public interface ProductService {
 
 	void deleteProduct(String idProduct);
 
-	List<ProductDto> getProducts(int page, int limit, String search, int status);
+	List<ProductDto> getAllProducts();
+	
+	
  
 }

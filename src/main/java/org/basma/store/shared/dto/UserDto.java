@@ -99,6 +99,4 @@ public class UserDto implements Serializable {
 		this.roleUser = roleUser;
 	}
 	
-	
-	
 }

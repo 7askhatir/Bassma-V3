@@ -1,13 +1,19 @@
 package org.basma.store.controllers;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.basma.store.requests.CategorieRequest;
-import org.basma.store.responses.CategorieResponse;
+import org.basma.store.responses.CategorieResponse ;
 import org.basma.store.services.CategorieService;
-import org.basma.store.shared.dto.CategorieDto;
+import org.basma.store.shared.dto.CategorieDto; 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+@CrossOrigin("http://localhost:4200")
 @RestController
 @RequestMapping("/categories") // localhost:8080/categories
+
 public class CategorieController {
 
 	@Autowired
@@ -37,6 +46,16 @@ public class CategorieController {
 
 	}
 
+	@GetMapping
+	public ResponseEntity<List<CategorieResponse>>getCategorie(){
+		List<CategorieDto> categories = categorieService.getAllCategories();
+		Type listType = new TypeToken <List<CategorieResponse>>() {}.getType();
+		List<CategorieResponse> categoriesResponse = new ModelMapper().map(categories, listType);
+		return new ResponseEntity<List<CategorieResponse>>(categoriesResponse, HttpStatus.OK);
+
+	}
+	
+	
 	@PostMapping
 	public ResponseEntity<CategorieResponse> createCategorie(@RequestBody CategorieRequest categorieRequest)
 			throws Exception {
@@ -75,5 +94,7 @@ public class CategorieController {
 		categorieService.deleteCategorie(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	
 
 }

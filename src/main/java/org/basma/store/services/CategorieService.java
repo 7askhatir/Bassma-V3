@@ -2,7 +2,8 @@ package org.basma.store.services;
 
 import java.util.List;
 
-import org.basma.store.shared.dto.CategorieDto; 
+import org.basma.store.shared.dto.CategorieDto;
+import org.basma.store.shared.dto.ProductDto; 
 
 public interface CategorieService {
 
@@ -16,5 +17,8 @@ public interface CategorieService {
 
 	void deleteCategorie(String categorieId);
 
-	List<CategorieDto> getCategories(int page, int limit, String search, int status);
+
+	List<CategorieDto> getAllCategories();
+
+	
 }

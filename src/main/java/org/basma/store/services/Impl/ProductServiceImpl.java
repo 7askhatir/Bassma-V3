@@ -1,13 +1,18 @@
 package org.basma.store.services.Impl;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
- 
+
 import org.basma.store.entities.ProductEntity;
 import org.basma.store.repositories.CategorieRepository;
 import org.basma.store.repositories.ProductRepository;
 import org.basma.store.services.ProductService;
 import org.basma.store.shared.Utils;
+import org.basma.store.shared.dto.CategorieDto;
 import org.basma.store.shared.dto.ProductDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -67,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductDto getProductByProductId(String idProduct) {
-		
+
 		ProductEntity productEntity = productRepository.findByProductId(idProduct);
 
 		if (productEntity == null)
@@ -82,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductDto updateProduct(String id, ProductDto productDto) {
-		
+
 		ProductEntity productEntity = productRepository.findByProductId(id);
 
 		if (productEntity == null)
@@ -92,13 +97,13 @@ public class ProductServiceImpl implements ProductService {
 		productEntity.setDescriptionProduct(productDto.getDescriptionProduct());
 		productEntity.setQtStockProduct(productDto.getQtStockProduct());
 		productEntity.setPrixProduct(productDto.getPrixProduct());
-		
+
 		ProductEntity productUpdate = productRepository.save(productEntity);
-		
+
 		ProductDto product = new ProductDto();
-		
+
 		BeanUtils.copyProperties(productUpdate, product);
-		
+
 		return product;
 	}
 
@@ -109,15 +114,22 @@ public class ProductServiceImpl implements ProductService {
 
 		if (productEntity == null)
 			throw new UsernameNotFoundException(idProduct);
-		
+
 		productRepository.delete(productEntity);
 
 	}
 
 	@Override
-	public List<ProductDto> getProducts(int page, int limit, String search, int status) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProductDto> getAllProducts() {
+        List<ProductDto> productsDto = new ArrayList<>();
+        for (ProductEntity produit : productRepository.findAll()) {  
+        	
+        	productsDto.add(new ProductDto(produit.getIdProduct(),produit.getProductId(),produit.getTitleProduct(),produit.getDescriptionProduct(),produit.getPrixProduct(),produit.getQtStockProduct(),produit.getListImages(), new CategorieDto(produit.getCategorie())));
+
+            }
+        
+
+        return productsDto.size() > 0 ? productsDto : null; 
 	}
 
 }

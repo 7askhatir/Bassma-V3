@@ -45,6 +45,7 @@ public class UserEntity implements Serializable{
 	private String roleUser;
 	
 	
+	
 	public UserEntity(String nomUser, String prenomUser, String email, String roleUser) {
 		super();
 		this.nomUser = nomUser;

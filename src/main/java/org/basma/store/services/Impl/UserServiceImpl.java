@@ -1,13 +1,18 @@
 package org.basma.store.services.Impl;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.basma.store.entities.ProductEntity;
 import org.basma.store.entities.UserEntity;
 import org.basma.store.repositories.UserRepository;
 import org.basma.store.services.UserService;
 import org.basma.store.shared.Utils;
+import org.basma.store.shared.dto.ProductDto;
 import org.basma.store.shared.dto.UserDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -124,9 +129,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getUsers(int page, int limit, String search, int status) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserDto> getAllUsers() {
+		List<UserEntity> users = (List<UserEntity>)userRepository.findAll();
+		Type listType = new TypeToken<List<UserDto>>() {}.getType();
+		List<UserDto> usersDto = new ModelMapper().map(users, listType);
+		return usersDto;
 	}
+
 
 }

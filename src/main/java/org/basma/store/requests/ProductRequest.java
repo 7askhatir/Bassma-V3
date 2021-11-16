@@ -1,17 +1,21 @@
 package org.basma.store.requests;
 
+import java.util.ArrayList;
+
 public class ProductRequest {
-private String titleProduct; 
-	
+	private String titleProduct;
 
 	private String descriptionProduct;
- 
+
 	private double prixProduct;
 
 	private int qtStockProduct;
+
+
+	ArrayList<String> listImages = new ArrayList<String>();
 	
 	private int idCategorie;
-	
+
 	public int getIdCategorie() {
 		return idCategorie;
 	}
@@ -51,5 +55,13 @@ private String titleProduct;
 	public void setQtStockProduct(int qtStockProduct) {
 		this.qtStockProduct = qtStockProduct;
 	}
-	
+
+	public ArrayList<String> getListImages() {
+		return listImages;
+	}
+
+	public void setListImages(ArrayList<String> listImages) {
+		this.listImages = listImages;
+	}
+
 }
